@@ -1,7 +1,7 @@
 {
-    "name": "vendor/codeception-mailtrap-module",
+    "name": "hispavista/codeception-mailtrap-module",
     "description": "Description of project codeception-mailtrap-module.",
-    "version":"1.0.0-dev",
+    "version":"1.0.0",
     "type":"library",
     "authors": [
         {
