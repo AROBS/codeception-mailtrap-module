@@ -125,7 +125,7 @@ class MailTrapHelper extends \Codeception\Module
         
         if (!preg_match($regex, $email['text_body'], $matches)) {
             $this->assertNotEmpty($matches, "No matches found for $regex");
-            //echo "No matches found for $regex";
+            
         }
         
         return $matches;
@@ -142,10 +142,6 @@ class MailTrapHelper extends \Codeception\Module
         
         $this->assertContains($expected, $email['text_body'], "Email Contains");
         
-        //$pos = strpos($email['text_body'], $expected);
-        //if ($pos === false) {
-        //    echo "Cadena no encontrada\n";
-        //}
     }
     
      /**
@@ -180,7 +176,6 @@ class MailTrapHelper extends \Codeception\Module
         
         if (empty($messages)) {
             $this->fail("No messages received");
-            //echo "No hay mensajes";
         }
 
         return $messages;
