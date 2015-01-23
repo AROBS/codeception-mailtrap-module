@@ -1,6 +1,6 @@
 {
-    "name": "hispavista/codeception-mailtrap-module",
-    "description": "Description of project codeception-mailtrap-module.",
+    "name": "anca-arobs/codeception-mailtrap-module",
+    "description": "Mailtrap Codeception Module",
     "version":"1.0.0",
     "type":"library",
     "authors": [
@@ -14,6 +14,7 @@
         }
     ],
     "require": {
+        "codeception/codeception": "*",
         "guzzle/guzzle": "*"
     },
     "autoload": {
