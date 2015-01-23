@@ -1,34 +1,34 @@
-<?php 
+<?php
 
 namespace Codeception\Module;
 
 class MailTrapHelper extends \Codeception\Module
 {
-    
+
     /**
      * @var GuzzleHttp\Client
      */
-    protected $mailtrap;  
-    
+    protected $mailtrap;
+
     /**
      * @var string
      */
     protected $base_url = 'https://mailtrap.io/api/v1/';
-    
+
     /**
      * @var array
      */
-    protected $config = array('token', 'inbox' );
-    
+    protected $config = ['token', 'inbox' ];
+
     /**
      * @var array
      */
-    protected $required = array('token', 'inbox' );
-    
+    protected $required = ['token', 'inbox' ];
+
     public function _initialize(){
-        
+
         $this->mailtrap= new \Guzzle\Http\Client($this->base_url);
-        $this->mailtrap->setDefaultOption("query", array('api_token'=>$this->config["token"]));
+        $this->mailtrap->setDefaultOption("query", ['api_token'=>$this->config["token"]]);
     }
 
     public function seeMyVar($var){
@@ -45,11 +45,11 @@ class MailTrapHelper extends \Codeception\Module
      * @author Iker Barrena <iker.barrena@corp.hispavista.com>
      **/
     public function cleanInbox() {
-        
+
         $inboxid = $this->inboxID($this->config["inbox"]);
         $response = $this->mailtrap->patch('inboxes/'.$inboxid.'/clean')->send();
-    }    
-    
+    }
+
     /**
      * See In Last Email
      *
@@ -59,7 +59,7 @@ class MailTrapHelper extends \Codeception\Module
      * @author Iker Barrena <iker.barrena@corp.hispavista.com>
      **/
     public function seeInLastEmail($expected) {
-        
+
         $email = $this->lastMessage();
         $this->seeInEmail($email, $expected);
     }
@@ -88,12 +88,12 @@ class MailTrapHelper extends \Codeception\Module
      * @author Iker Barrena <iker.barrena@corp.hispavista.com>
      **/
     public function grabFromLastEmail($regex) {
-        
+
         $email = $this->lastMessage();
         $matches = $this->grabMatchesFromEmail($email, $regex);
-                
+
         return $matches[0];
-    }    
+    }
 
     /**
      * Grab From Last Email From
@@ -108,11 +108,11 @@ class MailTrapHelper extends \Codeception\Module
 
         $email = $this->lastMessageFrom($address);
         $matches = $this->grabMatchesFromEmail($email, $regex);
-        
-        return $matches[0];       
-    }    
-    
-     /**
+
+        return $matches[0];
+    }
+
+    /**
      * See In Last Email From
      *
      * Look for a string in the most recent email sent from $address
@@ -121,14 +121,14 @@ class MailTrapHelper extends \Codeception\Module
      * @author Iker Barrena <iker.barrena@corp.hispavista.com>
      **/
     public function seeInLastEmailFrom($address, $expected) {
-        
+
         $email = $this->lastMessageFrom($address);
         $this->seeInEmail($email, $expected);
     }
-    
-     // ----------- HELPER METHODS BELOW HERE -----------------------//
-    
-     /**
+
+    // ----------- HELPER METHODS BELOW HERE -----------------------//
+
+    /**
      * Grab From Email
      *
      * Return the matches of a regex against the raw email
@@ -137,15 +137,16 @@ class MailTrapHelper extends \Codeception\Module
      * @author Iker Barrena <iker.barrena@corp.hispavista.com>
      **/
     protected function grabMatchesFromEmail($email, $regex) {
-        
+
         if (!preg_match($regex, $email['text_body'], $matches)) {
-            $this->assertNotEmpty($matches, "No matches found for $regex");
-            
+            if (!preg_match($regex, $email['html_body'], $matches)) {
+                $this->assertNotEmpty($matches, "No matches found for $regex");
+            }
         }
-        
+
         return $matches;
-    }  
-     /**
+    }
+    /**
      * See In Email
      *
      * Look for a string in an email
@@ -172,43 +173,43 @@ class MailTrapHelper extends \Codeception\Module
         $this->assertContains($expected, $email['html_body'], "Email Contains");
 
     }
-    
-     /**
+
+    /**
      * Inboxes
-     * 
+     *
      * Get all the inboxes
-     * 
+     *
      * @return void
      * @author Iker Barrena <iker.barrena@corp.hispavista.com
      */
     protected function Inboxes() {
-        
+
         $response = $this->mailtrap->get('inboxes')->send();
-        echo "Peticion realizada :".$response->getStatusCode()."\n";
-        
+
+
         return $response->json();
-    } 
-    
-     /**
+    }
+
+    /**
      * Messages
-     * 
+     *
      * Get all messages of the default inbox
-     * 
+     *
      * @return array
      * @author Iker Barrena <iker.barrena@corp.hispavista.com>
      */
     protected function Messages() {
-        
+
         $inboxid = $this->inboxID($this->config["inbox"]);
         $response = $this->mailtrap->get('inboxes/'.$inboxid.'/messages')->send();
         $messages = $response->json();
-        
+
         if (empty($messages)) {
             $this->fail("No messages received");
         }
 
         return $messages;
-    } 
+    }
 
     /**
      * Last Message From
@@ -220,50 +221,50 @@ class MailTrapHelper extends \Codeception\Module
      **/
     protected function lastMessageFrom($address) {
         $messages = $this->Messages();
-        
+
         foreach ($messages as $message) {
             if (strpos($message['from_email'], $address) !== false) {
-                       
-                return $message;     
+
+                return $message;
             }
         }
-        
+
         $this->fail("No messages sent from {$address}");
-    }     
-    
-     /**
+    }
+
+    /**
      * Last Message
-     * 
+     *
      * Get the most recent message of the default inbox
-     * 
+     *
      * @return array
      * @author Iker Barrena <iker.barrena@corp.hispavista.com>
      */
     protected function lastMessage() {
-        
+
         //Get the id of the last message
-        $messages = $this->Messages();        
+        $messages = $this->Messages();
         $last = array_shift($messages);
-               
+
         return $last;
-    }  
-    
-     /**
+    }
+
+    /**
      * inboxID
-     * 
+     *
      * Get the inbox id of a given inbox name
-     * 
+     *
      * @return string
      * @author Iker Barrena <iker.barrena@corp.hispavista.com>
      */
     protected function inboxID($expected) {
-        
+
         $inboxes = $this->Inboxes();
-        
+
         foreach ($inboxes as $inbox) {
             if ($inbox["name"] == $expected) {
                 return $inbox["id"];
-            }            
+            }
         }
     }
 }
