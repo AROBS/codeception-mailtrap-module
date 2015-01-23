@@ -7,10 +7,14 @@
         {
             "name": "Iker Barrena",
             "email": "iker.barrena@corp.hispavista.com"
+        },
+        {
+            "name": "Anca Uricariu",
+            "email": "anca.dogaru@gmail.com"
         }
     ],
     "require": {
-
+        "guzzle/guzzle": "*"
     },
     "autoload": {
         "psr-4": {

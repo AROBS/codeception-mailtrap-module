@@ -64,6 +64,21 @@ class MailTrapHelper extends \Codeception\Module
         $this->seeInEmail($email, $expected);
     }
 
+
+    /**
+     * See In Last Email
+     *
+     * Look for a string in the most recent email
+     *
+     * @return void
+     * @author Iker Barrena <iker.barrena@corp.hispavista.com>
+     **/
+    public function seeInLastEmailHtmlVersion($expected) {
+
+        $email = $this->lastMessage();
+        $this->seeInHtmlEmail($email, $expected);
+    }
+
     /**
      * Grab From Last Email
      *
@@ -139,9 +154,23 @@ class MailTrapHelper extends \Codeception\Module
      * @author Iker Barrena <iker.barrena@corp.hispavista.com>
      **/
     protected function seeInEmail($email, $expected) {
-        
+
         $this->assertContains($expected, $email['text_body'], "Email Contains");
-        
+
+    }
+
+    /**
+     * See In HTML version Email
+     *
+     * Look for a string in the html version of an email
+     *
+     * @return void
+     * @author Iker Barrena <iker.barrena@corp.hispavista.com>
+     **/
+    protected function seeInHtmlEmail($email, $expected) {
+
+        $this->assertContains($expected, $email['html_body'], "Email Contains");
+
     }
     
      /**
