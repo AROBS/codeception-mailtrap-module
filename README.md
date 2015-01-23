@@ -17,7 +17,7 @@ You need to add the repository into your composer.json file
 ```
 You can install this package through composer:
 ```bash
-composer anca-arobs/codeception-mailtrap-module
+composer require anca-arobs/codeception-mailtrap-module
 ```
 
 ## Usage
