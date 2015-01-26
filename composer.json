@@ -1,5 +1,5 @@
 {
-    "name": "anca-arobs/codeception-mailtrap-module",
+    "name": "arobs/codeception-mailtrap-module",
     "description": "Mailtrap Codeception Module",
     "version":"1.0.0",
     "type":"library",
